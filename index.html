@@ -260,6 +260,11 @@
       align-items: center;
       gap: 16px;
     }
+    .desktop-nav {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
     .nav-link {
       font-size: 13px;
       letter-spacing: 0.08em;
@@ -285,24 +290,59 @@
     /* LOGO */
     .brand-logo {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      text-align: center;
+      gap: 12px;
+      text-decoration: none;
+      transition: opacity 0.2s var(--ease);
+    }
+    .brand-logo:hover {
+      opacity: 0.92;
+    }
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .brand-logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1;
     }
     .brand-logo .logo-word {
       font-family: var(--font-serif);
-      font-size: 26px;
-      letter-spacing: 0.32em;
+      font-size: 24px;
+      letter-spacing: 0.3em;
       font-weight: 500;
       line-height: 1;
       color: var(--ink);
     }
     .brand-logo .logo-tag {
-      font-size: 9px;
+      font-size: 8.5px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--saffron);
       margin-top: 4px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .header-inner .brand-logo-text {
+        display: none;
+      }
+      .brand-logo-img {
+        height: 32px;
+      }
+      .header-right {
+        gap: 6px;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+      }
     }
 
     /* HEADER CONTROLS */
@@ -650,27 +690,48 @@
       opacity: 1;
     }
 
-    /* HERO SECTION */
+    /* HERO SECTION WITH BACKGROUND VIDEO */
     .hero-section {
       min-height: calc(100vh - var(--header-h) - 40px);
-      background: radial-gradient(circle at 60% 40%, #1e3227 0%, #12100E 80%);
-      color: var(--ivory);
       position: relative;
       display: flex;
       align-items: center;
-      padding: 80px 0;
+      padding: 90px 0;
       overflow: hidden;
+      color: var(--ivory);
+      background-color: var(--ink);
     }
-    .hero-art-bg {
+
+    /* Background video wrapper */
+    .hero-video-wrapper {
       position: absolute;
-      right: -80px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 580px;
-      height: 580px;
-      opacity: 0.24;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
       pointer-events: none;
     }
+
+    #hero-bg-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.85) contrast(1.05);
+      transform: scale(1.01);
+      transition: opacity 0.8s var(--ease);
+    }
+
+    /* Clean directional gradient scrim so video is vivid while text stays legible */
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(18, 16, 14, 0.82) 0%, rgba(18, 16, 14, 0.42) 55%, rgba(18, 16, 14, 0.12) 100%),
+                  linear-gradient(180deg, rgba(18, 16, 14, 0.35) 0%, transparent 40%, rgba(18, 16, 14, 0.6) 100%);
+      pointer-events: none;
+    }
+
     .hero-headline {
       font-family: var(--font-serif);
       font-size: clamp(38px, 6vw, 76px);
@@ -678,6 +739,7 @@
       font-weight: 300;
       max-width: 860px;
       margin: 16px 0 24px;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.5);
     }
     .hero-headline em {
       font-style: italic;
@@ -685,10 +747,244 @@
     }
     .hero-sub {
       font-size: clamp(16px, 1.8vw, 19px);
-      color: rgba(246, 241, 231, 0.85);
+      color: rgba(246, 241, 231, 0.95);
       max-width: 640px;
       line-height: 1.6;
       margin-bottom: 40px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+    }
+
+    /* ==========================================================================
+       MARQUEE TICKER STRIP ("merqeen")
+       ========================================================================== */
+    .brand-marquee-strip {
+      background: linear-gradient(90deg, #12100E 0%, #1B2A22 50%, #12100E 100%);
+      color: var(--ivory);
+      border-top: 1px solid rgba(185, 138, 62, 0.45);
+      border-bottom: 1px solid rgba(185, 138, 62, 0.45);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 16px 0;
+      position: relative;
+      z-index: 5;
+    }
+    .marquee-track {
+      display: inline-flex;
+      align-items: center;
+      gap: 36px;
+      animation: marqueeTrack 36s linear infinite;
+    }
+    .brand-marquee-strip:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(246, 241, 231, 0.92);
+      font-weight: 500;
+    }
+    .marquee-sep {
+      color: var(--saffron-soft);
+      font-size: 12px;
+      line-height: 1;
+    }
+    @keyframes marqueeTrack {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ==========================================================================
+       3 REELS SHOWCASE SECTION (VERTICAL 9:16)
+       ========================================================================== */
+    .reels-section {
+      padding: 90px 0 100px;
+      background-color: var(--ivory);
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    .reels-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 48px;
+    }
+    .reels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 960px) {
+      .reels-grid {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+        margin: 0 auto;
+        gap: 40px;
+      }
+    }
+    .reel-card {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: #0b0c0b;
+      aspect-ratio: 9 / 16;
+      min-height: 520px;
+      box-shadow: 0 16px 36px rgba(18, 16, 14, 0.14);
+      border: 1px solid rgba(185, 138, 62, 0.28);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+    .reel-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 50px rgba(18, 16, 14, 0.22);
+      border-color: var(--saffron);
+    }
+    .reel-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .reel-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(18,16,14,0.7) 0%, rgba(18,16,14,0.05) 30%, rgba(18,16,14,0.15) 55%, rgba(18,16,14,0.92) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .reel-top-bar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 18px;
+    }
+    .reel-badge {
+      background: rgba(18, 16, 14, 0.65);
+      border: 1px solid rgba(185, 138, 62, 0.45);
+      color: var(--saffron-soft);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      font-weight: 500;
+    }
+    .reel-top-controls {
+      display: flex;
+      gap: 8px;
+    }
+    .reel-ctrl-btn {
+      background: rgba(18, 16, 14, 0.65);
+      border: 1px solid rgba(246, 241, 231, 0.25);
+      color: var(--ivory);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .reel-ctrl-btn:hover {
+      background: var(--saffron);
+      color: var(--ink);
+      border-color: var(--saffron);
+    }
+    .reel-center-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(18, 16, 14, 0.65);
+      border: 1px solid rgba(185, 138, 62, 0.7);
+      color: var(--ivory);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), background 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .reel-card:hover .reel-center-play,
+    .reel-card.paused .reel-center-play {
+      opacity: 1;
+    }
+    .reel-center-play:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: var(--saffron);
+      color: var(--ink);
+    }
+    .reel-bottom-info {
+      position: relative;
+      z-index: 3;
+      padding: 18px 20px 20px;
+      color: var(--ivory);
+    }
+    .reel-tagline {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--saffron-soft);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .reel-title {
+      font-family: var(--font-serif);
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--ivory);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .reel-desc {
+      font-size: 12px;
+      color: rgba(246, 241, 231, 0.82);
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+    .reel-upload-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(185, 138, 62, 0.9);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      border: 1px solid rgba(246, 241, 231, 0.2);
+    }
+    .reel-upload-label:hover {
+      background: #d4a754;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(185, 138, 62, 0.35);
+    }
+    .reel-upload-input {
+      display: none;
     }
 
     /* PHILOSOPHY STRIP */
@@ -963,11 +1259,14 @@
 
   <!-- PRELOADER -->
   <div id="preloader">
-    <div class="brand-logo" style="transform: scale(1.3);">
-      <span class="logo-word">KYORP</span>
-      <span class="logo-tag">Key to Original Purity</span>
+    <div class="brand-logo" style="flex-direction: column; align-items: center; text-align: center; gap: 8px;">
+      <img src="logo.jpeg" onerror="this.onerror=null; this.src='logo.jepg';" alt="KYORP Logo" style="height: 52px; width: auto; object-fit: contain; margin-bottom: 4px; border-radius: 4px;">
+      <div class="brand-logo-text" style="align-items: center; text-align: center;">
+        <span class="logo-word" style="font-size: 30px; letter-spacing: 0.32em;">KYORP</span>
+        <span class="logo-tag" style="color: var(--saffron); font-size: 10px; letter-spacing: 0.22em;">Key to Original Purity</span>
+      </div>
     </div>
-    <div style="margin-top: 32px; width: 48px; height: 1px; background: var(--saffron);"></div>
+    <div style="margin-top: 28px; width: 48px; height: 1px; background: var(--saffron);"></div>
   </div>
 
   <!-- ANNOUNCEMENT BAR -->
@@ -985,7 +1284,10 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
 
-        <nav class="desktop-nav" style="display: flex; gap: 28px; align-items: center;">
+        <nav class="desktop-nav">
+          <!-- Home Tab Added in the Header as requested -->
+          <a href="#home" class="nav-link active" data-i18n="nav_home">Home</a>
+
           <div class="has-dropdown">
             <a href="#collections" class="nav-link" data-i18n="nav_collections">Collections</a>
             <!-- Mega Menu (Full-Width Anchored to Header) -->
@@ -993,7 +1295,7 @@
               <div class="container">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 12px;">
                   <div class="label-caps" data-i18n="master_divisions">Master Divisions • 15 Specialised Ranges</div>
-                  <a href="#collections" style="font-size: 12px; color: var(--saffron); font-weight: 500;">View Complete Directory &rarr;</a>
+                  <a href="#collections" style="font-size: 12px; color: var(--saffron); font-weight: 500;" onclick="window.closeMegaMenu()">View Complete Directory &rarr;</a>
                 </div>
                 <div class="mega-grid" id="mega-menu-grid">
                   <!-- Populated by JS -->
@@ -1002,15 +1304,19 @@
             </div>
           </div>
           <a href="#about" class="nav-link" data-i18n="nav_philosophy">Our Philosophy</a>
+          <a href="#reels" class="nav-link" data-i18n="nav_reels">Ritual Reels</a>
           <a href="#institutional" class="nav-link" data-i18n="nav_institutional">Institutional</a>
           <a href="#contact" class="nav-link" data-i18n="nav_contact">Contact</a>
         </nav>
       </div>
 
-      <!-- Center Logo -->
+      <!-- Center Logo (Both Image and Name) -->
       <a href="#home" class="brand-logo" aria-label="KYORP Home">
-        <span class="logo-word">KYORP</span>
-        <span class="logo-tag" data-i18n="brand_tagline">Key to Original Purity</span>
+        <img src="logo.jpeg" onerror="this.onerror=null; this.src='logo.jepg';" alt="KYORP Logo" class="brand-logo-img">
+        <div class="brand-logo-text">
+          <span class="logo-word">KYORP</span>
+          <span class="logo-tag" data-i18n="brand_tagline">Key to Original Purity</span>
+        </div>
       </a>
 
       <!-- Right Controls -->
@@ -1037,13 +1343,20 @@
   <!-- MOBILE MENU -->
   <div id="mobile-menu">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <span class="label-caps" data-i18n="menu_title">Menu</span>
+      <a href="#home" class="brand-logo" aria-label="KYORP Home" onclick="document.getElementById('mobile-menu').classList.remove('open')">
+        <img src="logo.jpeg" onerror="this.onerror=null; this.src='logo.jepg';" alt="KYORP Logo" style="height: 34px; width: auto; object-fit: contain;">
+        <div class="brand-logo-text">
+          <span class="logo-word" style="font-size: 20px;">KYORP</span>
+          <span class="logo-tag" style="font-size: 8px;">Key to Original Purity</span>
+        </div>
+      </a>
       <button type="button" id="mobile-menu-close" class="icon-btn" aria-label="Close menu">&times;</button>
     </div>
     <div class="mobile-nav-links">
       <a href="#home" class="mobile-nav-link" data-i18n="nav_home">Home</a>
       <a href="#collections" class="mobile-nav-link" data-i18n="nav_collections">Collections</a>
       <a href="#about" class="mobile-nav-link" data-i18n="nav_philosophy">Our Philosophy</a>
+      <a href="#reels" class="mobile-nav-link" data-i18n="nav_reels">Ritual Reels</a>
       <a href="#institutional" class="mobile-nav-link" data-i18n="nav_institutional">Institutional & B2B</a>
       <a href="#contact" class="mobile-nav-link" data-i18n="nav_contact">Contact</a>
       <a href="#wishlist" class="mobile-nav-link" data-i18n="nav_wishlist">Saved Wishlist</a>
@@ -1104,11 +1417,32 @@
 
   <!-- MAIN SPA VIEW HOST -->
   <main id="app-viewport">
-    
+
     <!-- ==================== VIEW 1: HOME ==================== -->
     <section id="view-home" class="page-view active">
-      <!-- Hero -->
-      <div class="hero-section">
+      <!-- Hero with Background Video (Continuously looping ambient visual) -->
+      <div class="hero-section" id="hero-section">
+        <!-- Video Element in background -->
+        <div class="hero-video-wrapper">
+          <video
+            id="hero-bg-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=1920&q=80"
+            preload="auto"
+          >
+            <!-- User local video paths with graceful streaming fallback -->
+            <source src="image/WhatsApp Video 2026-10-31 at 8.06.22 AM.mp4" type="video/mp4">
+            <source src="video.mp4" type="video/mp4">
+            <source src="/video.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-liquid-drops-splashing-in-slow-motion-42848-large.mp4" type="video/mp4">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+          </video>
+          <div class="hero-video-overlay"></div>
+        </div>
+
         <div class="container" style="position: relative; z-index: 2;">
           <span class="label-caps text-saffron" data-i18n="hero_eyebrow">Key to Original Purity • Est. 2026</span>
           <h1 class="hero-headline" data-i18n="hero_title">
@@ -1117,12 +1451,37 @@
           <p class="hero-sub" data-i18n="hero_desc">
             KYORP is an umbrella consumer health ecosystem spanning 15 specialised divisions and 429 master formulations — rooted in original purity, biotechnology, and evidence-backed care.
           </p>
-          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
             <a href="#collections" class="btn btn-gold" data-i18n="btn_explore">Explore 15 Divisions</a>
             <a href="#about" class="btn btn-outline-light" data-i18n="btn_philosophy">Our Philosophy</a>
+            <a href="#reels-showcase-section" class="btn btn-outline-light" style="display: inline-flex; align-items: center; gap: 8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+              Watch Ritual Reels
+            </a>
           </div>
         </div>
-        <div class="hero-art-bg" id="hero-svg-host"></div>
+      </div>
+
+      <!-- ==================== MARQUEE TICKER STRIP ("merqeen") ==================== -->
+      <div class="brand-marquee-strip" id="brand-marquee-strip" aria-label="Brand Philosophy Marquee">
+        <div class="marquee-track">
+          <!-- Track Set 1 -->
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Ancient Indian Ayurveda × Modern Clinical Science</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> 15 Specialised Divisions • 429 Master Formulations</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Dermalock™ Biomimetic Lipid Architecture (3:1:1:1 Ratio)</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> Batch HPLC Chromatography &amp; Bio-Molecular Purity</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Ethically Harvested Kashmir Saffron &amp; Kerala Terroirs</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> Zero Adulteration • 100% Original Purity Guaranteed</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Clinically Validated • Dermatologist Endorsed</span>
+          <!-- Track Set 2 (Seamless Infinite Loop) -->
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Ancient Indian Ayurveda × Modern Clinical Science</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> 15 Specialised Divisions • 429 Master Formulations</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Dermalock™ Biomimetic Lipid Architecture (3:1:1:1 Ratio)</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> Batch HPLC Chromatography &amp; Bio-Molecular Purity</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Ethically Harvested Kashmir Saffron &amp; Kerala Terroirs</span>
+          <span class="marquee-item"><span class="marquee-sep">❖</span> Zero Adulteration • 100% Original Purity Guaranteed</span>
+          <span class="marquee-item"><span class="marquee-sep">✦</span> Clinically Validated • Dermatologist Endorsed</span>
+        </div>
       </div>
 
       <!-- Philosophy Strip -->
@@ -1148,6 +1507,149 @@
           </div>
         </div>
       </div>
+
+      <!-- ==================== 3 REELS SHOWCASE SECTION ("uplod the reels 3") ==================== -->
+      <section class="reels-section" id="reels-showcase-section">
+        <div class="container">
+          <div class="reels-header">
+            <span class="label-caps" style="color: var(--saffron);">KYORP In Motion • Master Rituals</span>
+            <h2 class="serif" style="font-size: clamp(28px, 4vw, 42px); font-weight: 400; margin: 8px 0 14px;">
+              Formulations &amp; Botanicals In Real Time
+            </h2>
+            <p style="color: var(--stone); font-size: 15px; line-height: 1.6;">
+              Experience bio-active extraction, barrier science, and sacred rituals in high definition. You can upload custom video files (MP4/WebM) to any of the 3 reels below.
+            </p>
+          </div>
+
+          <div class="reels-grid">
+            <!-- REEL 1 -->
+            <div class="reel-card" id="reel-card-0">
+              <video
+                id="reel-vid-0"
+                class="reel-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=720&q=80"
+                preload="metadata"
+                onclick="window.toggleReelPlay(0)"
+              >
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-liquid-drops-splashing-in-slow-motion-42848-large.mp4" type="video/mp4">
+              </video>
+              <div class="reel-overlay"></div>
+
+              <div class="reel-top-bar">
+                <span class="reel-badge" id="reel-badge-0">Reel 01 • Saffron Science</span>
+                <div class="reel-top-controls">
+                  <button type="button" class="reel-ctrl-btn" id="reel-sound-btn-0" onclick="window.toggleReelSound(0, event)" title="Toggle Sound" aria-label="Toggle Sound">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <button type="button" class="reel-center-play" id="reel-play-btn-0" onclick="window.toggleReelPlay(0)" aria-label="Toggle Play">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+              </button>
+
+              <div class="reel-bottom-info">
+                <div class="reel-tagline">Div 01 • Dermalock™ &amp; Facial Science</div>
+                <h3 class="reel-title" id="reel-title-0">Saffron Harvest &amp; Cold Extraction</h3>
+                <p class="reel-desc" id="reel-desc-0">Pampore terroir extraction of Grade A1 Mogra Crocus sativus preserving bioactive crocin.</p>
+                <label class="reel-upload-label" title="Upload custom video for Reel 1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload Video 1
+                  <input type="file" class="reel-upload-input" accept="video/*" onchange="window.handleReelUpload(event, 0)">
+                </label>
+              </div>
+            </div>
+
+            <!-- REEL 2 -->
+            <div class="reel-card" id="reel-card-1">
+              <video
+                id="reel-vid-1"
+                class="reel-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=720&q=80"
+                preload="metadata"
+                onclick="window.toggleReelPlay(1)"
+              >
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+              </video>
+              <div class="reel-overlay"></div>
+
+              <div class="reel-top-bar">
+                <span class="reel-badge" id="reel-badge-1">Reel 02 • Clinical Barrier</span>
+                <div class="reel-top-controls">
+                  <button type="button" class="reel-ctrl-btn" id="reel-sound-btn-1" onclick="window.toggleReelSound(1, event)" title="Toggle Sound" aria-label="Toggle Sound">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <button type="button" class="reel-center-play" id="reel-play-btn-1" onclick="window.toggleReelPlay(1)" aria-label="Toggle Play">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+              </button>
+
+              <div class="reel-bottom-info">
+                <div class="reel-tagline">Div 03 • Dermato-Clinical Systems</div>
+                <h3 class="reel-title" id="reel-title-1">72-Hour Barrier Lipid Matrix</h3>
+                <p class="reel-desc" id="reel-desc-1">Biomimetic ceramide-cholesterol infusion restoring stratum corneum micro-fissures.</p>
+                <label class="reel-upload-label" title="Upload custom video for Reel 2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload Video 2
+                  <input type="file" class="reel-upload-input" accept="video/*" onchange="window.handleReelUpload(event, 1)">
+                </label>
+              </div>
+            </div>
+
+            <!-- REEL 3 -->
+            <div class="reel-card" id="reel-card-2">
+              <video
+                id="reel-vid-2"
+                class="reel-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=720&q=80"
+                preload="metadata"
+                onclick="window.toggleReelPlay(2)"
+              >
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+              </video>
+              <div class="reel-overlay"></div>
+
+              <div class="reel-top-bar">
+                <span class="reel-badge" id="reel-badge-2">Reel 03 • Ritual &amp; Sculpt</span>
+                <div class="reel-top-controls">
+                  <button type="button" class="reel-ctrl-btn" id="reel-sound-btn-2" onclick="window.toggleReelSound(2, event)" title="Toggle Sound" aria-label="Toggle Sound">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <button type="button" class="reel-center-play" id="reel-play-btn-2" onclick="window.toggleReelPlay(2)" aria-label="Toggle Play">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+              </button>
+
+              <div class="reel-bottom-info">
+                <div class="reel-tagline">Div 02 • Saffron &amp; Rasayana Radiance</div>
+                <h3 class="reel-title" id="reel-title-2">Kansa Wand Lymphatic Sculpt</h3>
+                <p class="reel-desc" id="reel-desc-2">Bio-thermal copper-tin alloy massage enhancing transdermal nutrient micro-circulation.</p>
+                <label class="reel-upload-label" title="Upload custom video for Reel 3">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload Video 3
+                  <input type="file" class="reel-upload-input" accept="video/*" onchange="window.handleReelUpload(event, 2)">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- The Ecosystem Rail -->
       <section style="padding: 100px 0;">
@@ -1313,7 +1815,7 @@
 
       <div class="container" style="padding: 96px 24px;">
         <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px;">
-          
+
           <div>
             <span class="label-caps">01 / The Core Formula</span>
             <h2 class="serif" style="font-size: 36px; margin: 12px 0 20px;">Ayurveda × Modern Science × Clinical Validation × Original Purity</h2>
@@ -1510,7 +2012,7 @@
 
       <div class="container" style="padding: 80px 24px;">
         <div class="responsive-2col" style="display: grid; grid-template-columns: 2fr 1fr; gap: 64px;">
-          
+
           <div>
             <!-- Section 16A -->
             <div style="margin-bottom: 56px;">
@@ -1610,7 +2112,7 @@
           <div>
             <span class="label-caps">Corporate Office</span>
             <h2 class="serif" style="font-size: 32px; margin: 8px 0 20px;">KYORP India Private Limited</h2>
-            
+
             <div style="display: flex; flex-direction: column; gap: 18px; font-size: 14px; color: var(--stone); margin-bottom: 40px;">
               <div>
                 <strong style="color: var(--ink); display: block; margin-bottom: 4px;">Registered Headquarters</strong>
@@ -1685,7 +2187,7 @@
         <!-- FAQ Section -->
         <div style="margin-top: 96px; border-top: 1px solid var(--line); padding-top: 64px; max-width: 800px; margin-left: auto; margin-right: auto;">
           <h2 class="serif" style="font-size: 32px; text-align: center; margin-bottom: 40px;">Frequently Addressed Topics</h2>
-          
+
           <div class="accordion-item">
             <button type="button" class="accordion-header" aria-expanded="false">
               <span>What distinguishes Original Purity from standard natural claims?</span>
@@ -1755,7 +2257,7 @@
           <div id="cart-summary-panel">
             <div style="background: var(--parchment); border: 1px solid var(--line); padding: 36px; border-radius: var(--radius); position: sticky; top: 100px;">
               <h3 class="serif" style="font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 12px;">Order Summary</h3>
-              
+
               <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px;">
                 <span class="text-stone">Subtotal</span>
                 <span id="cart-subtotal" style="font-weight: 500;">₹0</span>
@@ -1878,9 +2380,12 @@
       <div class="footer-grid">
         <!-- Col 1: Brand Statement -->
         <div>
-          <div class="brand-logo" style="align-items: flex-start; margin-bottom: 16px;">
-            <span class="logo-word" style="color: var(--ivory);">KYORP</span>
-            <span class="logo-tag" style="color: var(--saffron-soft);">Key to Original Purity</span>
+          <div class="brand-logo" style="margin-bottom: 16px; align-items: center;">
+            <img src="logo.jpeg" onerror="this.onerror=null; this.src='logo.jepg';" alt="KYORP Logo" class="brand-logo-img" style="filter: brightness(1.2);">
+            <div class="brand-logo-text">
+              <span class="logo-word" style="color: var(--ivory);">KYORP</span>
+              <span class="logo-tag" style="color: var(--saffron-soft);">Key to Original Purity</span>
+            </div>
           </div>
           <p style="font-size: 13px; line-height: 1.7; color: rgba(246, 241, 231, 0.75); max-width: 380px;">
             A premier Indian consumer health ecosystem uniting Ancient Ayurveda, biotechnology, cosmetic science, oral care, nutrition, and non-invasive HealthTech.
@@ -1996,6 +2501,7 @@
           nav_institutional: "Institutional",
           nav_contact: "Contact",
           nav_home: "Home",
+          nav_reels: "Ritual Reels",
           nav_wishlist: "Saved Wishlist",
           nav_cart: "Order Cart",
           wishlist_title: "Saved Formulations Wishlist",
@@ -2046,6 +2552,7 @@
           nav_institutional: "संस्थागत देखभाल",
           nav_contact: "संपर्क",
           nav_home: "मुखपृष्ठ",
+          nav_reels: "रिचुअल्स रील्स",
           nav_wishlist: "पसंदीदा सूची",
           nav_cart: "ऑर्डर सूची",
           wishlist_title: "सहेजे गए फॉर्मूलेशन (विशलिस्ट)",
@@ -2413,7 +2920,7 @@
         [95,"Liquid Hand Wash","Hand cleansing liquid wash","wash"],
         [96,"Foaming Hand Wash","Foaming hand cleanser","wash"],
         [97,"Alcohol Hand Sanitiser","Alcohol-based hand sanitiser / hand rub","wash"],
-        [98,"Moisturising Hand Sanitising Gel","Sanitising gel with moisturising skin-care base","gel"],
+        [98,"Moisturising Hand Sanitising Gel","Sanitising gel con moisturising skin-care base","gel"],
         [99,"Saffron Bathing Soap Bar","Botanical bathing soap bar","bar"],
         [100,"Moisturising Syndet Cleansing Bar","Soap-free moisturising syndet cleansing bar","bar"],
         [101,"Saffron Hair Strengthening Oil","Strengthening hair/scalp oil","oil"],
@@ -2798,7 +3305,8 @@
         wishlist: JSON.parse(localStorage.getItem("kyorp_wish") || "[]"),
         currentView: "home",
         categoryParams: { divId: "skin-science", typeFilter: "all", sort: "sku", page: 1 },
-        currentSku: "001"
+        currentSku: "001",
+        isVideoPausedByUser: false
       };
 
       function saveStore() {
@@ -2871,7 +3379,127 @@
       }
 
       /* ==========================================================================
-         7. VIEW ROUTER & NAVIGATION CONTROLLER
+         7. HERO BACKGROUND VIDEO CONTROLLER (Continuous Seamless Loop)
+         ========================================================================== */
+      const heroVideo = document.getElementById("hero-bg-video");
+      const heroSection = document.getElementById("hero-section");
+      let isHeroInView = true;
+
+      function updateVideoPlayState() {
+        if (!heroVideo) return;
+        const shouldPlay = STATE.currentView === "home" && isHeroInView;
+
+        if (shouldPlay) {
+          const playPromise = heroVideo.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Graceful catch for autoplay browser policies
+            });
+          }
+        } else {
+          heroVideo.pause();
+        }
+      }
+
+      // Intersection Observer for Hero Background Video
+      if ("IntersectionObserver" in window && heroSection) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isHeroInView = entry.isIntersecting && entry.intersectionRatio > 0.08;
+            updateVideoPlayState();
+          });
+        }, { threshold: [0, 0.08, 0.5, 1.0] });
+
+        heroObserver.observe(heroSection);
+      }
+
+      // Scroll listener fallback for smooth continuous loop
+      window.addEventListener("scroll", () => {
+        if (!heroSection) return;
+        const rect = heroSection.getBoundingClientRect();
+        const currentlyVisible = rect.bottom > 80 && rect.top < window.innerHeight;
+        if (currentlyVisible !== isHeroInView) {
+          isHeroInView = currentlyVisible;
+          updateVideoPlayState();
+        }
+      }, { passive: true });
+
+      /* ==========================================================================
+         7.1 REELS CONTROLLER & VIDEO UPLOAD HANDLERS ("uplod the reels 3")
+         ========================================================================== */
+      window.toggleReelPlay = function(index) {
+        const video = document.getElementById(`reel-vid-${index}`);
+        const card = document.getElementById(`reel-card-${index}`);
+        const playBtn = document.getElementById(`reel-play-btn-${index}`);
+        if (!video) return;
+
+        if (video.paused) {
+          video.play().then(() => {
+            if (card) card.classList.remove("paused");
+            if (playBtn) playBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+          }).catch(err => console.log("Reel play error:", err));
+        } else {
+          video.pause();
+          if (card) card.classList.add("paused");
+          if (playBtn) playBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="8 5 19 12 8 19 8 5"/></svg>`;
+        }
+      };
+
+      window.toggleReelSound = function(index, e) {
+        if (e) e.stopPropagation();
+        const video = document.getElementById(`reel-vid-${index}`);
+        const soundBtn = document.getElementById(`reel-sound-btn-${index}`);
+        if (!video || !soundBtn) return;
+
+        video.muted = !video.muted;
+        if (video.muted) {
+          soundBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+          showToast(`Reel ${index + 1} audio muted.`);
+        } else {
+          soundBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+          showToast(`Reel ${index + 1} audio unmuted.`);
+        }
+      };
+
+      window.handleReelUpload = function(event, index) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("video/")) {
+          showToast("Please upload a valid MP4, WebM or video file.");
+          return;
+        }
+
+        const objectUrl = URL.createObjectURL(file);
+        const video = document.getElementById(`reel-vid-${index}`);
+        const titleEl = document.getElementById(`reel-title-${index}`);
+        const badgeEl = document.getElementById(`reel-badge-${index}`);
+        const card = document.getElementById(`reel-card-${index}`);
+
+        if (video) {
+          video.src = objectUrl;
+          video.load();
+          video.play().then(() => {
+            if (card) card.classList.remove("paused");
+          }).catch(() => {});
+        }
+
+        if (badgeEl) {
+          badgeEl.textContent = `Reel 0${index + 1} • Uploaded`;
+          badgeEl.style.borderColor = "var(--saffron)";
+          badgeEl.style.color = "var(--saffron-soft)";
+        }
+
+        if (titleEl) {
+          const cleanName = file.name.replace(/\.[^/.]+$/, "");
+          titleEl.textContent = cleanName.length > 32 ? cleanName.substring(0, 32) + "..." : cleanName;
+        }
+
+        showToast(`Reel 0${index + 1} updated with "${file.name}"!`);
+      };
+
+      /* ==========================================================================
+         8. VIEW ROUTER & NAVIGATION CONTROLLER
          ========================================================================== */
       function navigateTo(hash) {
         const clean = (hash || "#home").replace("#", "");
@@ -2898,11 +3526,31 @@
         // Hide all views
         document.querySelectorAll(".page-view").forEach(el => el.classList.remove("active"));
 
+        // Anchor support for Reels showcase section on Home page
+        if (viewName === "reels" || viewName === "reels-showcase-section") {
+          const homeView = document.getElementById("view-home");
+          if (homeView) homeView.classList.add("active");
+          STATE.currentView = "home";
+          renderHome();
+          updateVideoPlayState();
+          document.querySelectorAll(".nav-link").forEach(link => {
+            link.classList.toggle("active", link.getAttribute("href") === "#reels");
+          });
+          document.getElementById("mobile-menu")?.classList.remove("open");
+          setTimeout(() => {
+            document.getElementById("reels-showcase-section")?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+          return;
+        }
+
         // Match view
         const targetView = document.getElementById(`view-${viewName}`) || document.getElementById("view-home");
         targetView.classList.add("active");
         STATE.currentView = viewName;
         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // Update video playback state whenever page or section changes!
+        updateVideoPlayState();
 
         // Update nav active link
         document.querySelectorAll(".nav-link").forEach(link => {
@@ -2934,15 +3582,10 @@
       window.addEventListener("hashchange", () => navigateTo(window.location.hash));
 
       /* ==========================================================================
-         8. VIEW RENDERERS
+         9. VIEW RENDERERS
          ========================================================================== */
-      // 8.1 HOME RENDERER
+      // 9.1 HOME RENDERER
       function renderHome() {
-        const heroArtHost = document.getElementById("hero-svg-host");
-        if (heroArtHost && !heroArtHost.hasChildNodes()) {
-          heroArtHost.innerHTML = renderProductSVG("serum", "#B98A3E", "DERMALOCK");
-        }
-
         const rail = document.getElementById("home-divisions-rail");
         if (rail && rail.children.length === 0) {
           rail.innerHTML = DIVISIONS.map(d => `
@@ -2976,7 +3619,7 @@
         }
       }
 
-      // 8.2 COLLECTIONS RENDERER
+      // 9.2 COLLECTIONS RENDERER
       function renderCollections() {
         const grid = document.getElementById("collections-grid-all");
         if (!grid) return;
@@ -3001,13 +3644,13 @@
         `).join("");
       }
 
-      // 8.3 CATEGORY RENDERER (WITH PAGINATION)
+      // 9.3 CATEGORY RENDERER (WITH PAGINATION)
       function renderCategory() {
         const div = DIVISIONS.find(d => d.id === STATE.categoryParams.divId) || DIVISIONS[0];
-        
+
         document.getElementById("cat-hero-title").textContent = div.name;
         document.getElementById("cat-hero-desc").textContent = div.desc;
-        
+
         const badge = document.getElementById("cat-badge-status");
         badge.className = div.status === "live" ? "badge-live" : "badge-dev";
         badge.textContent = div.status === "live" ? "Commercial Active Range" : "In Development — Subject to Regulatory Filing";
@@ -3062,10 +3705,10 @@
         }
       }
 
-      // 8.4 PRODUCT DETAIL RENDERER
+      // 9.4 PRODUCT DETAIL RENDERER
       function renderProduct() {
         const prod = ALL_PRODUCTS.find(p => p.sku === STATE.currentSku) || ALL_PRODUCTS[0];
-        
+
         // Reset quantity input on product change
         const qtyInp = document.getElementById("qty-input");
         if (qtyInp) qtyInp.value = "1";
@@ -3114,7 +3757,7 @@
         document.getElementById("ritual-related-grid").innerHTML = related.map(p => createProductCardHTML(p)).join("");
       }
 
-      // 8.5 CART RENDERER
+      // 9.5 CART RENDERER
       function renderCart() {
         const list = document.getElementById("cart-items-list");
         const empty = document.getElementById("cart-empty-state");
@@ -3168,7 +3811,7 @@
         document.getElementById("cart-total").textContent = formatPrice(total);
       }
 
-      // 8.6 WISHLIST RENDERER
+      // 9.6 WISHLIST RENDERER
       function renderWishlist() {
         const grid = document.getElementById("wishlist-items-grid");
         const empty = document.getElementById("wishlist-empty-state");
@@ -3196,7 +3839,7 @@
       }
 
       /* ==========================================================================
-         9. HELPER: PRODUCT CARD HTML CREATOR
+         10. HELPER: PRODUCT CARD HTML CREATOR
          ========================================================================== */
       function createProductCardHTML(p) {
         const isWished = STATE.wishlist.includes(p.sku);
@@ -3228,7 +3871,7 @@
       }
 
       /* ==========================================================================
-         10. GLOBAL STORE ACTIONS (CART, WISHLIST, SEARCH)
+         11. GLOBAL STORE ACTIONS (CART, WISHLIST, SEARCH)
          ========================================================================== */
       function showToast(msg) {
         const toast = document.getElementById("toast-notify");
@@ -3548,11 +4191,20 @@
         document.getElementById("newsletter-thanks").style.display = "block";
       };
 
+      // MEGA MENU CLOSER FUNCTION
+      window.closeMegaMenu = function() {
+        const menu = document.querySelector('.mega-menu');
+        if (menu) {
+          menu.style.display = 'none'; // Force hide
+          setTimeout(() => { menu.style.display = ''; }, 150); // Restore CSS control
+        }
+      };
+
       // POPULATE MEGA MENU
       const megaGrid = document.getElementById("mega-menu-grid");
       if (megaGrid) {
         megaGrid.innerHTML = DIVISIONS.map(d => `
-          <a href="#category?d=${d.id}" class="mega-item">
+          <a href="#category?d=${d.id}" class="mega-item" onclick="window.closeMegaMenu()">
             <span class="mega-item-title">
               <span>${d.num}. ${d.name}</span>
               <span style="font-size: 11px; color: var(--saffron); flex-shrink: 0;">${d.count} SKUs</span>
@@ -3577,13 +4229,13 @@
           header.style.transform = "translateY(0)";
         }
         lastScroll = scrolled;
-      });
+      }, { passive: true });
 
       // MOBILE MENU
       const mobToggle = document.getElementById("mobile-menu-toggle");
       const mobMenu = document.getElementById("mobile-menu");
       const mobClose = document.getElementById("mobile-menu-close");
-      
+
       mobToggle?.addEventListener("click", () => mobMenu.classList.add("open"));
       mobClose?.addEventListener("click", () => mobMenu.classList.remove("open"));
 
@@ -3602,7 +4254,8 @@
         function checkScreen() {
           const isMob = window.innerWidth <= 960;
           if (mobToggle) mobToggle.style.display = isMob ? "flex" : "none";
-          document.querySelector(".desktop-nav").style.display = isMob ? "none" : "flex";
+          const dNav = document.querySelector(".desktop-nav");
+          if (dNav) dNav.style.display = isMob ? "none" : "flex";
         }
         checkScreen();
         window.addEventListener("resize", checkScreen);
@@ -3611,6 +4264,7 @@
         updateCartCount();
         updateWishCount();
         navigateTo(window.location.hash || "#home");
+        updateVideoPlayState();
       });
 
     })();
